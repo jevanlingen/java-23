@@ -4,12 +4,18 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 public class Exercise10_PrimitiveTypesInPatterns_S {
+    private static final int PREMIUM_DISCOUNT_PERCENTAGE = 20;
+    private static final int REGULAR_DISCOUNT_PERCENTAGE = 5;
+
     public static void main() throws IOException, URISyntaxException {
         System.out.println(getHTTPCodeDesc(3));
         System.out.println(getHTTPCodeDesc(100));
         System.out.println(getHTTPCodeDesc(200));
         System.out.println(getHTTPCodeDesc(333));
         System.out.println(getHTTPCodeDesc(500));
+        System.out.println("------------------");
+        System.out.println(calculateDiscount(true, 232));
+        System.out.println(calculateDiscount(false, 232));
     }
 
     public static String getHTTPCodeDesc(int code) {
@@ -27,6 +33,13 @@ public class Exercise10_PrimitiveTypesInPatterns_S {
             case int i when i > 400 && i < 500 -> "Client Error";
             case int i when i > 502 && i < 600 -> "Server Error";
             default                            -> "Unknown error";
+        };
+    }
+
+    public static int calculateDiscount(boolean isPremiumMember, int totalAmount) {
+        return switch (isPremiumMember) {
+            case true -> (totalAmount * PREMIUM_DISCOUNT_PERCENTAGE) / 100;
+            case false -> (totalAmount * REGULAR_DISCOUNT_PERCENTAGE) / 100;
         };
     }
 }

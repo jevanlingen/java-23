@@ -4,14 +4,21 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 // Task 1: Rewrite `getHTTPCodeDesc` with pattern matching
+// Task 2: Rewrite `calculateDiscount` with pattern matching
 
 public class Exercise10_PrimitiveTypesInPatterns {
+    private static final int PREMIUM_DISCOUNT_PERCENTAGE = 20;
+    private static final int REGULAR_DISCOUNT_PERCENTAGE = 5;
+
     public static void main() throws IOException, URISyntaxException {
         System.out.println(getHTTPCodeDesc(3));
         System.out.println(getHTTPCodeDesc(100));
         System.out.println(getHTTPCodeDesc(200));
         System.out.println(getHTTPCodeDesc(333));
         System.out.println(getHTTPCodeDesc(500));
+        System.out.println("------------------");
+        System.out.println(calculateDiscount(true, 232));
+        System.out.println(calculateDiscount(false, 232));
     }
 
     public static String getHTTPCodeDesc(int code) {
@@ -54,5 +61,17 @@ public class Exercise10_PrimitiveTypesInPatterns {
         else {
             return "Unknown error";
         }
+    }
+
+    public static int calculateDiscount(boolean isPremiumMember, int totalAmount) {
+        int discount;
+        if (isPremiumMember) {
+            // Calculate discount for premium members
+            discount = (totalAmount * PREMIUM_DISCOUNT_PERCENTAGE) / 100;
+        } else {
+            // Calculate discount for regular members
+            discount = (totalAmount * REGULAR_DISCOUNT_PERCENTAGE) / 100;
+        }
+        return discount;
     }
 }
