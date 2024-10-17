@@ -93,13 +93,58 @@ Try your hand at the exercises in the _Exercise2_UnnamedVariablesPatterns_ class
 
 ---slide---
 
-# Scoped Value
+# Scoped Value & StructuredTaskScope
 
-JEP 429
+JEP 429 | JEP 453
 
 ---vertical---
 
 _"Scoped values enable a method to share immutable data with its callees and child threads, making it easier to manage and reason about data flow compared to thread-local variables."_
+
+---vertical---
+
+```java
+public final static ScopedValue<User> LOGGED_IN_USER = ScopedValue.newInstance();
+ ```
+
+```java
+ScopedValue.where(LOGGED_IN_USER, new User("me")).run(
+  () -> System.out.println(LOGGED_IN_USER.get().getName())
+);
+ ```
+
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+---vertical---
+
+_"Structured Concurrency is a concept that improves the implementation, readability, and maintainability of code for dividing a task into subtasks and processing them concurrently."_
+
+---vertical---
+
+- Defines a clear scope at the beginning of which the subtasks' threads start and at the end of which the subtasks' threads end,
+- that allows clean error handling,
+- and that allows a clean cancellation of subtasks whose results are no longer needed
+
+---vertical---
+
+
+```java
+try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+    Future<Optional<Data>> internalData = scope.fork(
+      () -> internalService.getData(request)
+    );
+    Future<String> externalData = scope.fork(externalService::getData);
+    try {
+        scope.join();
+        scope.throwIfFailed();
+
+        Optional<Data> data = internalData.resultNow();
+        // Return data in the response and set proper HTTP status
+    } catch (InterruptedException | ExecutionException | IOException e) {
+        response.setStatus(500);
+    }
+}
+```
 
 ---vertical---
 
@@ -196,7 +241,7 @@ Stream.of("foo", "bar", "baz", "quux")
     .gather(distinctBy(String::length)) // Could be
     .toList();
  ```
- 
+
 ---vertical---
 
 ```java
@@ -207,7 +252,7 @@ Stream.of("foo", "bar", "baz", "quux")
  * @param <R> the type of output elements from the gatherer operation
  */
 public interface Gatherer<T, A, R> {
-    
+
 }
  ```
 
