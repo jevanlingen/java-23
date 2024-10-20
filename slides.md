@@ -307,6 +307,65 @@ _“Class files and the underlying Bytecode serve as the universal language with
 
 ---vertical---
 
+```java
+/**
+* Models a classfile.  The contents of the classfile can be traversed via
+* a streaming view (e.g., {@link #elements()}), or via random access (e.g.,
+* {@link #flags()}), or by freely mixing the two.
+*/
+public sealed interface ClassModel extends CompoundElement<ClassElement>, AttributedElement permits ClassImpl {     
+    // implementation
+}
+```
+
+---vertical---
+
+```java
+// Read existing class into a variable
+var classModel = ClassFile.of().parse(Path.of("uri-of-existing-class"));
+
+classModel.constantPool();
+classModel.methods();
+classModel.elements();
+classModel.etc(); // more methods
+```
+
+---vertical---
+
+```java
+// Change one class in another
+var newClass = ClassFile.of().transform(classModel, (builder, element) -> {
+    if (element instanceof FieldModel f && f.fieldName().equalsString("OLD_NAME")) {
+        builder.withField("NEW_NAME", f.fieldTypeSymbol(), ACC_PUBLIC);
+    } else {
+        builder.with(element);
+    }
+});
+
+try (var fos = new FileOutputStream("YourClassName.class")) {
+  fos.write(newClass);
+}
+```
+
+---vertical---
+
+```java
+// Build a new class file
+ClassFile.of().buildTo(Path.of("ReturnOne.class"), of("ReturnOne"), classBuilder -> classBuilder
+    .withMethodBody("returnOne", ofDescriptor("()I"), ACC_PUBLIC | ACC_STATIC, codeBuilder -> codeBuilder
+        .iconst_1()
+        .ireturn())
+);
+```
+
+```bytecode
+public static returnOne()I
+  ICONST_1
+  IRETURN
+```
+
+---vertical---
+
 # Exercises
 Try your hand at the exercises in the _Exercise8_ClassFileApi_ class now.
 
@@ -332,7 +391,7 @@ import org.springframework.util.StringUtils;
 // etc
  ```
 
----vertical--- <!-- .element: data-transition="none" -->
+---vertical---
 
 ```java
 import module M;
@@ -373,4 +432,3 @@ Try your hand at the exercises in the _Exercise10_PrimitiveTypesInPatterns_ clas
 ---slide---
 
 # Thank you
-
