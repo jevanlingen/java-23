@@ -17,6 +17,34 @@ https://github.com/jevanlingen/java-23
 
 ---slide---
 
+# <span style="color:red">Disclaimer</span>
+
+---vertical---
+
+_“A preview feature is a new feature whose design, specification, and implementation are complete, but which is not permanent, which means that the feature may exist in a different form or not at all in future JDK releases."_
+
+---vertical---
+
+# String Templates
+
+JEP 459
+
+---vertical---
+
+_“Enhance the Java programming language with string templates. String templates complement Java's existing string literals and text blocks by coupling literal text with embedded expressions and template processors to produce specialized results.”_
+
+---vertical---
+
+```java
+var s = STR."Welcome, \{user.firstName()}, to your account \{user.accountNumber()}";
+ ```
+
+---vertical---
+
+_"The time has come for us to decide what to do about this feature with respect to JDK 23. Given that there is support for a change in the design but a lack of clear consensus on what that new design might look like, the prudent course of action is to (i) **NOT** ship the current design as a preview feature in JDK 23, and (ii) take our time continuing the design process."_
+
+---slide---
+
 # Implicit Declared Class
 
 JEP 477
@@ -274,10 +302,37 @@ public class TestGatherer implements Gatherer<Integer, List<Integer>, Integer> {
 
 ---vertical---
 
-- **initializer**: Creates the gatherer's private state object.
-- **integrator**: <span width="80%">Integrates a new element from the input stream, possibly inspects the private state object, and possibly emits elements to the output stream.</span>
-- **combiner**: Combines two private state objects into one when the gatherer is processing the stream in parallel.
-- **finisher**: Optionally performs an action after the gatherer has processed all input elements; it could inspect the private state object or emit additional output elements.
+## integrator
+
+The **core** method where the actual data processing logic is defined.
+
+```java
+
+/**
+ * A function which integrates provided elements, potentially using the provided intermediate state,
+ * optionally producing output to the provided Downstream.
+ *
+ * @param <A> the potentially mutable state type of the gatherer operation
+ *            (often hidden as an implementation detail)
+ * @param <T> the type of input elements to the gatherer operation
+ * @param <R> the type of output elements from the gatherer operation
+ *
+ * @return a function which integrates provided elements, potentially using
+ *         the provided state, optionally producing output to the provided
+ *         Downstream
+ */
+Integrator<A, T, R> integrator();
+
+```
+
+---vertical---
+
+## Optional methods
+
+- **initializer**: Relevant when an internal state is utilized in the integrator or finisher. In such cases, the Initializer Method is responsible for properly initializing this internal state before any data processing begins.
+- **combiner**: Combines two private state objects into one when the gatherer is processing the stream in _parallel_.
+- **finisher**: Used for final processing and transformations after all elements have been integrated.
+- **andThen**: Compose gatherer from other gatherers.
 
 ---vertical---
 
