@@ -157,21 +157,38 @@ _"Structured Concurrency is a concept that improves the implementation, readabil
 
 
 ```java
-try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
-    Future<Optional<Data>> internalData = scope.fork(
-      () -> internalService.getData(request)
-    );
-    Future<String> externalData = scope.fork(externalService::getData);
-    try {
-        scope.join();
-        scope.throwIfFailed();
+try (var scope = new StructuredTaskScope()) {
+    Subtask<String> task1 = scope.fork(() -> authService.getUsername());
+    Subtask<ExData> task2 = scope.fork(externalService::getData);
 
-        Optional<Data> data = internalData.resultNow();
-        // Return data in the response and set proper HTTP status
-    } catch (InterruptedException | ExecutionException | IOException e) {
-        response.setStatus(500);
+    try {
+        scope.join(); // Wait for all subtasks started in this task scope to finish
+
+        var username = task1.get();
+        var data = task2.get();
+    } catch (InterruptedException e) {
+        // handle exception
     }
 }
+```
+
+---vertical---
+
+# Strategies
+
+
+```java
+// Use where the results for all subtasks are required ("invoke all")
+new StructuredTaskScope();
+
+// Use where the results for all subtasks are required ("invoke all")
+// if any subtask fails then the results of other unfinished subtasks are no longer needed
+new StructuredTaskScope.ShutdownOnFailure();
+
+
+// Intended for cases where the result of any subtask will do ("invoke any") 
+// and where the results of other unfinished subtasks are no longer needed
+new StructuredTaskScope.ShutdownOnSuccess();
 ```
 
 ---vertical---
@@ -269,7 +286,7 @@ Stream.of("foo", "bar", "baz", "quux")
     .gather(distinctBy(String::length)) // Could be
     .toList();
  ```
-
+ 
 ---vertical---
 
 ```java
@@ -280,7 +297,7 @@ Stream.of("foo", "bar", "baz", "quux")
  * @param <R> the type of output elements from the gatherer operation
  */
 public interface Gatherer<T, A, R> {
-
+    
 }
  ```
 
