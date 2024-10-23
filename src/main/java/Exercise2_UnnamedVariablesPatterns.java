@@ -1,7 +1,7 @@
 import java.util.List;
 
-// TASk 1: Replace with unnamed pattern
-// TASk 2 (Bonus): Improve `.get(0)` call
+// TASK 1: Replace with unnamed pattern
+// TASK 2 (Bonus): Improve `.get(0)` call
 public class Exercise2_UnnamedVariablesPatterns {
     public static void main(){
         final var house = new House(List.of(new Chamber.LivingRoom(true, false), new Chamber.Kitchen( false, false), new Chamber.Bathroom( true, true)));

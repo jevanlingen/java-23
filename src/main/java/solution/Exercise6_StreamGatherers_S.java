@@ -16,7 +16,7 @@ public class Exercise6_StreamGatherers_S {
                 .toList();
 
         final var amountOfAnimals = words.stream()
-                .gather(fold(() -> 0, (a, b) -> Animal.match(b) ? a + 1 : a))
+                .gather(fold(() -> 0, (accumulator, element) -> Animal.match(element) ? accumulator + 1 : accumulator))
                 .findFirst()
                 .orElseThrow();
 

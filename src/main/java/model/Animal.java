@@ -7,7 +7,7 @@ public enum Animal {
 
    public static boolean match(final String s) {
       return Arrays.stream(Animal.values())
-              .anyMatch(it -> ignoreSpecialChars(s).equalsIgnoreCase(ignoreSpecialChars(it.name())));
+              .anyMatch(it -> ignoreSpecialChars(s.replace(" ", "")).equalsIgnoreCase(ignoreSpecialChars(it.name())));
    }
 
    private static String ignoreSpecialChars(final String s) {
