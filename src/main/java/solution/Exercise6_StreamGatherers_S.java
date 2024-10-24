@@ -11,7 +11,7 @@ public class Exercise6_StreamGatherers_S {
     public static void main(){
         final var words = List.of("Sheep", "Sheep Dog", "Wolf", "Table", "Chair", "Stool", "Sea", "Land");
 
-        final var groupedByType = words.stream()
+        final var chunkedByThree = words.stream()
                 .gather(windowFixed(3))
                 .toList();
 
@@ -20,7 +20,7 @@ public class Exercise6_StreamGatherers_S {
                 .findFirst()
                 .orElseThrow();
 
-        System.out.println(groupedByType);
+        System.out.println(chunkedByThree);
         System.out.println(amountOfAnimals);
     }
 }

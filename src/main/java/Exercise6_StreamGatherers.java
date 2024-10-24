@@ -13,11 +13,11 @@ public class Exercise6_StreamGatherers {
     public static void main(){
         final var words = List.of("Sheep", "Sheep Dog", "Wolf", "Table", "Chair", "Stool", "Sea", "Land");
 
-        final var groupedByType = splitIntoFixedWindows(words, 3);
+        final var chunkedByThree = splitIntoFixedWindows(words, 3);
 
         final var amountOfAnimals = countAnimals(words);
 
-        System.out.println(groupedByType);
+        System.out.println(chunkedByThree);
         System.out.println(amountOfAnimals);
     }
 
