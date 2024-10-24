@@ -353,6 +353,27 @@ Integrator<A, T, R> integrator();
 
 ---vertical---
 
+```java
+public class FilterLowerThanTen implements Gatherer<Integer, List<Integer>, Integer> {
+    @Override
+    public Integrator<List<Integer>, Integer, Integer> integrator() {
+        return Integrator.of((state, element, downstream) -> {
+            if (element > 10) {
+                downstream.push(element);
+            }
+            return true; // take next element
+        });
+    }
+}
+```
+
+```java
+Stream.of(22,12,4,9,100)
+    .gather(new FilterLowerThanTen()) // [22, 12, 100]
+```
+
+---vertical---
+
 ## Predefined gatherers
 
 Java offers in the `java.util.stream.Gatherers` class:
