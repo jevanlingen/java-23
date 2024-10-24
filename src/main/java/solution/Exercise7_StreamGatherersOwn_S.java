@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Gatherer;
 import java.util.stream.Stream;
 
-// Example from: https://softwaremill.com/stream-gatherers-in-practice-part-2/
 public class Exercise7_StreamGatherersOwn_S {
     public static void main(String[] args) {
         final var list = Stream.of(22, 11, 4, 9, 100)
