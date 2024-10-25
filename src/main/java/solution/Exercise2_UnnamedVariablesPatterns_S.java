@@ -7,9 +7,9 @@ public class Exercise2_UnnamedVariablesPatterns_S {
         final var house = new House(List.of(new Chamber.LivingRoom(true, false), new Chamber.Kitchen( false, false), new Chamber.Bathroom( true, true)));
 
         final var whatIsChamberOne = switch (house.chambers.getFirst()) {
-            case Chamber.LivingRoom(_, boolean _) -> "It's a living room";
+            case Chamber.LivingRoom(_, var _) -> "It's a living room"; // notice you may remove the type as well
             case Chamber.Kitchen _ -> "It's the kitchen";
-            case Chamber.Bathroom(boolean _, boolean _) -> "It's a bathroom";
+            case Chamber.Bathroom(_, _) -> "It's a bathroom";
         };
 
         System.out.println(whatIsChamberOne);
