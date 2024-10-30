@@ -17,7 +17,7 @@ public class Exercise7_StreamGatherersOwn_S {
          @Override
          public Integrator<List<Integer>, Integer, Integer> integrator() {
              return Integrator.of((state, element, downstream) -> {
-                 if (element > 10) {
+                 if (element >= 10) {
                      return downstream.push(element);
                  }
                  return false; // take next element

@@ -358,7 +358,7 @@ public class FilterLowerThanTen implements Gatherer<Integer, List<Integer>, Inte
     @Override
     public Integrator<List<Integer>, Integer, Integer> integrator() {
         return Integrator.of((state, element, downstream) -> {
-            if (element > 10) {
+            if (element >= 10) {
                 downstream.push(element);
             }
             return true; // take next element
